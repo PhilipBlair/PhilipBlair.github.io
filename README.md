@@ -1,2 +1,0 @@
-# PhilipBlair.github.io
-Portfolio
