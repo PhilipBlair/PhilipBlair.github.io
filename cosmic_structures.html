@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Coding | Philip Blair</title>
+      <meta name="test" content="Test">
+      <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="shortcut icon" type="image/x-icon" href="Schriftzug32x32.png">
+   </head>
+   <body>
+      <a href="index.html">
+         <h1 style="color:black; font-family:; letter-spacing: px; font-weight: 0;"> Philip Blair
+         </h1>
+      </a>
+      <div id="space"></div>
+      <div id="centeredmenu">
+         <ul>
+            <li><a
+               class="active"
+               href="Physics.html"
+               style="font-family:sans-serif">
+               Physics</a>
+            </li>
+            <li><a href="GraphicDesign.html"
+               style="font-family:sans-serif">Graphic Design</a></li>
+            <li><a href="Coding.html"
+               style="font-family:sans-serif">Coding</a></li>
+         </ul>
+      </div>
+      <div id="bigspace"></div>
+      <hr style="height:0.5px" color="black" width=90%;>
+      <div id="doublespace"></div>
+      <h7> 
+         Cosmic Structures: Simulation and Numerics
+      </h7>
+      <div id="doublespace"></div>
+      <p class="textblock" style="text-align: justify">
+         Cartography of galaxies revealed that there is a large scale structure in the universe. The cause for these structures are already engraved in the very first light of the universe, the cosmic microwaver backround radiation (CMB). In this project, I used the statistical features of the CMB to recreate an simulation that exhibits the same structure as our universe.
+      </p>
+      <p class="textblock" style="text-align: justify">
+         <strong>Cosmology</strong><br>
+         <strong>Numeric N-Body Simulations</strong><br>
+         <strong>Python</strong><br>
+      </p>
+      <div id="doublespace"></div>
+      <hr style="height:0.5px" color="black" width=90%;>
+      <div id="doublespace"></div>
+      <div id="bigspace"></div>
+      <h2> 
+         Generated Simulation   
+      </h2>
+      <div>
+         <center>
+            <iframe src="cosmic_structures_3d_plot-1.html" height = "650" width = "800" frameBorder = "0"></iframe>
+         </center>
+      </div>
+      <h2>
+         How does our universe look like?
+      </h2>
+      <p class="textblock" style="text-align: justify">
+         Sometimes one can not see the forest for the trees. Similarly, the universe seems to be a huge, endless and chaotic space with randomly distributed galaxies in all directions. But behind all that mess is actually a pattern, that we still did not completely understand.
+      </p>
+      <p class="textblock" style="text-align: justify">
+         The image below is a map of the matter distribution of our universe. Each single pixel contains thousands of galixies, clustered together due to gravity. If we combine them, we can see a web like formation that spans for millions of light years across.
+      </p>
+      <div id="space"></div>
+      <img src="greatwalls.gif" alt="" align="Top" style="display:block;
+         margin-left: auto; margin-right: auto;; width:50%"/>
+      <p class="textblock" style="text-align: justify">
+         Naturally we want to what is causing these structures. A strategy to answer this question is to simulate an early universe and let it envolve, until it looks like the picture above. As a starting point, we need to use the very first light that was ever created, the Cosmic Microwave Backround Radiation (CMB).
+      </p>
+      <div id="doublespace"></div>
+      <img class="center" src="cmb_light.png" alt="" align="Top" style="display:block;
+         margin-left: auto; margin-right: auto;; width:70%"/>
+      <div id="doublespace"></div>
+      <p class="textblock" style="text-align: justify">
+         In the image above, the CMB is shown. Each color represents an assosiated wavelength that we can translate into a temperature. The differences in the Image are of the order of 0.000001°C, meaning that the image is acutally extremely homogeneous. However, we can analyze the small deviations and calculate their correlation with other deviations. With this way, we can see a pattern inside the CMB
+      </p>
+      <div id="doublespace"></div>
+      <img class="center" src="cmb_power.png" alt="" align="Top" style="display:block;
+         margin-left: auto; margin-right: auto;; width:70%"/>
+      <div id="doublespace"></div>
+      <h2>
+         How is it generated?
+      </h2>
+      <p class="textblock" style="text-align: justify">
+         As a first step in simulating the universe, we have to create a artifical CMB that has the same statistics as the real one. Its temperature deviations must be distributed Gaussian and have to follow a similar correlation pattern. Below, we see the result of three different realisations of the same correlation pattern, the only difference being the distance of the correlations. With a high value for k, correlations become long ranged, meaning we have a more ordered image.
+      </p>
+      <img class="center" src="correlation_fields.png" alt="" align="Top" style="display:block;
+         margin-left: auto; margin-right: auto;; width:100%"/>
+      <p class="textblock" style="text-align: justify">
+         We now assume that the CMB was the foundation for our universes matter distribution, meaning that areas with higher temperatures had a higher concentration of matter. Therefore, we can use the generated CMB as a gravitational field that attracts particles. By Implementing the resulting forces, a once uniform matter distribution becomes more and more structured like the spatial correlations we find in the CMB. We have created a first oder approximation for the universe!
+      </p>
+      <img class="center" src="trajectories.gif" alt="" align="Top" style="display:block;
+         margin-left: auto; margin-right: auto;; width:70%"/>
+      <p class="textblock" style="text-align: justify">
+         By tracking each particle, we can identify chaotic areas, get a feeling for transition times (so called shell crossing) and impress our friends. A summary of how to track particles and generate animated images can be found here.
+      </p>
+      <div id="bigspace"></div>
+      <div class="footer-div">
+         © philip blair 
+         &nbsp
+         &nbsp
+         |
+         &nbsp
+         philip.blair@gmx.de
+         &nbsp
+         |
+         &nbsp
+         &nbsp
+         <a class='linknocolor' href="https://www.linkedin.com/in/philip-blair/" target=”_blank”>
+         <i class="fa fa-linkedin fa-2x" id="icon2"></i></a> 
+         &nbsp
+         &nbsp
+         &nbsp
+         <a class='linknocolor' href="https://github.com/datalove123" target=”_blank”> 
+         <i class="fa fa-github fa-2x"></i>
+         </a>
+      </div>
+   </body>
+</html>

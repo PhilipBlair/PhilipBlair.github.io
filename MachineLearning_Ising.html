@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Machine Learning: Ising Model | Philip Blair</title>
+      <meta name="test" content="Test">
+      <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="shortcut icon" type="image/x-icon" href="Schriftzug32x32.png">
+      <link rel="stylesheet" href="/path/to/styles/default.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/atom-one-dark.min.css">
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+   </head>
+   <body>
+      <a href="index.html">
+         <h1 style="color:black; font-family:; letter-spacing: px; font-weight: 0;"> Philip Blair
+         </h1>
+      </a>
+      <div id="space"></div>
+      <div id="centeredmenu">
+         <ul>
+            <li><a
+               href="Physics.html"
+               style="font-family:sans-serif">
+               Physics</a>
+            </li>
+            <li><a href="GraphicDesign.html"
+               style="font-family:sans-serif">Graphic Design</a></li>
+            <li><a href="Coding.html"
+               class="active"
+               style="font-family:sans-serif">Coding</a></li>
+         </ul>
+      </div>
+      <div id="bigspace"></div>
+      <hr style="height:0.5px" color="black" width=90%;>
+      <div id="doublespace"></div>
+      <h7> 
+         Machine Learning: Ising Model
+      </h7>
+      <div id="doublespace"></div>
+      <p class="textblock" style="text-align: justify">
+         The goal of this project was to get a first impression of Machine Learning in the context of physical processes. The Ising Model was used as a simple example for statistical processes.
+         The report about the project can be viewed <a href="Report-Philip-Blair-final.pdf" target=”_blank”>here</a>.
+      </p>
+      <p class="textblock" style="text-align: justify">
+         <strong>Machine Learning</strong><br>
+         <strong>Statistical Physics</strong><br>
+         <strong>Julia Coding</strong><br>
+      </p>
+      <div id="doublespace"></div>
+      <hr style="height:0.5px" color="black" width=90%;>
+      <div id="doublespace"></div>
+      <h2> 
+         What is the Ising Model?   
+      </h2>
+      <div id="doublespace"></div>
+      <p class="textblock" style="text-align: justify">       
+         The Ising model is a mathematical model that provides valuable insights into the behavior of magnetic materials and phase transitions.
+      </p>
+      <p class="textblock" style="text-align: justify">
+         The Ising model consists of a lattice, which can be thought of as a grid of discrete points or sites. Each site on the lattice is associated with a spin, which can be either <strong>up</strong> or <strong>down</strong>. These spins represent the magnetic moments of individual atoms or particles within the material. The behavior of the Ising model is determined by the interactions between neighboring spins.
+      </p>
+      <p class="textblock" style="text-align: justify">
+         The energy of the Ising model is defined in terms of these spin interactions. When neighboring spins are aligned, the energy is lower, while misaligned spins result in higher energy. The goal of the Ising model is to determine the equilibrium configuration of spins that minimizes the system's energy.
+      </p>
+      <p class="textblock" style="text-align: justify">
+         The Ising model is particularly interesting because it exhibits phase transitions. At low temperatures, the spins tend to align, leading to a ferromagnetic phase with a net magnetization. As the temperature increases, thermal fluctuations become more significant, and the system undergoes a phase transition at a critical temperature (Tc). Above Tc, the material loses its magnetic order, resulting in a paramagnetic phase where spins are randomly oriented.
+      </p>
+      <div id="doublespace"></div>
+      <img class="center" src="ezgif.com-gif-maker.gif" alt="" loop=True >
+      <div id="doublespace"></div>
+      <p class="textblock" style="text-align: justify">       
+         For temperature = 0, the initial picture has a uniform color <strong>(black)</strong>. As we increase the temperature, more and more pixels change their color until the picture looks like white noise.
+      </p>
+      <div id="doublespace"></div>
+      <h2> 
+         What can we use a Neuronal Network for?
+      </h2>
+      <p class="textblock" style="text-align: justify">       
+         Following the paper of <a href="https://www.nature.com/articles/nphys4035" target=”_blank”>Melko et al.</a>, I was able to predicted the critical temperature to be Tc = 2.26 ± 0.01. As expected, the predictions improved as the lattice size increased, indicating the significance of system size in achieving higher quality predictions.
+      </p>
+      <p class="textblock" style="text-align: justify">       
+         By leveraging ensembles of N = 2000 configurations, I employed a novel neural network approach to predict the individual temperature of the coinfigurations. This was done for lattice sizes ranging from 10 to 40.
+      </p>
+      <div id="doublespace"></div>
+      <img class="center" src="Ising_individual_temp_prediction.png" alt="" loop=True >
+      <div id="doublespace"></div>
+      <p class="textblock" style="text-align: justify">       
+         Above we see the predicted temperature of one individual configuration. The maximum is well alligned with the actual temperature.
+      </p>
+      <p class="textblock" style="text-align: justify">       
+         As a first approach, the architecture of the neuronal network was not changed and compared to different approaches. The number of hidden layers could have been changed, as well as the number of neurons inside the network. It remains a method of trial and error which kind of structure results in good predictions. In more general problems where there is no system variable like the magnetization, altering the network can lead to dramatic changes in the prediction.
+      </p>
+      <div id="doublespace"></div>
+      <img class="center" src="Ising_temp_prediciton_all.png" alt="" loop=True >
+      <div id="doublespace"></div>
+      <p class="textblock" style="text-align: justify">       
+         Above we see predictions for different confoguration temperatures. Note that the confidence is highest near the critical temperature. This is because the system ondergoes a sudden phase transition, which leads to rapidly changing configurations.
+      </p>
+      <div id="doublespace"></div>
+      <h2> 
+         Code Example for generating Ising Configurations
+      </h2>
+      <pre>
+            <code class="language-python">
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    # Constants
+    k_B = 1
+    T_c = 2 / (k_B * np.log(1 + np.sqrt(2)))
+
+    def H_ij(lattice, i, j):
+        """
+        Calculates the energy of a lattice site (i, j) in the Ising model.
+
+        Args:
+            lattice (numpy.ndarray): The Ising lattice.
+            i (int): Row index of the lattice site.
+            j (int): Column index of the lattice site.
+
+        Returns:
+            float: The energy of the lattice site (i, j).
+        """
+        down = (i - 1) % lattice.shape[0]
+        top = (i + 1) % lattice.shape[0]
+        left = (j - 1) % lattice.shape[1]
+        right = (j + 1) % lattice.shape[1]
+
+        E_ij = np.sign(lattice[i, j]) * (lattice[top, j] + lattice[down, j] + lattice[i, left] + lattice[i, right])
+        return E_ij
+
+    def MonteCarlo_move(T, lattice, i, j):
+        """
+        Performs a Monte Carlo move by attempting to flip the spin of a lattice site (i, j) in the Ising model.
+
+        Args:
+            T (float): Temperature of the system.
+            lattice (numpy.ndarray): The Ising lattice.
+            i (int): Row index of the lattice site.
+            j (int): Column index of the lattice site.
+
+        Returns:
+            numpy.ndarray: The updated Ising lattice.
+        """
+        b = 1 / (T * k_B)
+        E = H_ij(lattice, i, j)  # calculate energy of node
+        E_flip = H_ij(lattice, i, j) * (-1)  # calculate energy of node if flipped
+        DE = E - E_flip
+        p = min(1, np.exp(-DE * b))  # take threshold value
+        r = np.random.rand()  # take random value
+        if r <= p:
+            lattice[i, j] *= -1  # flip spin if r is smaller than p
+        return lattice
+
+    def MonteCarlo_sweep(T, lattice):
+        """
+        Performs a sweep of Monte Carlo moves on the entire Ising lattice.
+
+        Args:
+            T (float): Temperature of the system.
+            lattice (numpy.ndarray): The Ising lattice.
+
+        Returns:
+            numpy.ndarray: The updated Ising lattice after the sweep.
+        """
+        lattice_c = np.copy(lattice)
+        for i in range(lattice_c.shape[0]):
+            for j in range(lattice_c.shape[1]):
+                lattice_c = MonteCarlo_move(T, lattice_c, i, j)
+        return lattice_c
+
+    def MonteCarlo(T, lattice, sweeps):
+        """
+        Performs multiple Monte Carlo sweeps on the Ising lattice.
+
+        Args:
+            T (float): Temperature of the system.
+            lattice (numpy.ndarray): The Ising lattice.
+            sweeps (int): Number of Monte Carlo sweeps to perform.
+
+        Returns:
+            numpy.ndarray: The final Ising lattice after the specified number of sweeps.
+        """
+        for _ in range(sweeps):
+            lattice = MonteCarlo_sweep(T, lattice)
+        return lattice
+
+    L = 20
+    T = 0.1
+    lattice = np.random.choice([-1, 1], size=(L, L))
+
+    lattice = MonteCarlo(T, lattice, 5)
+    plt.subplot
+
+            </code>
+
+        </pre>
+      <div class="footer-div">
+         © philip blair 
+         &nbsp
+         &nbsp
+         |
+         &nbsp
+         philip.blair@gmx.de
+         &nbsp
+         |
+         &nbsp
+         &nbsp
+         <a class='linknocolor' href="https://www.linkedin.com/in/philip-blair/" target=”_blank”>
+         <i class="fa fa-linkedin fa-2x" id="icon2"></i></a> 
+         &nbsp
+         &nbsp
+         &nbsp
+         <a class='linknocolor' href="https://github.com/datalove123" target=”_blank”> 
+         <i class="fa fa-github fa-2x"></i>
+         </a>
+      </div>
+      <script src="/path/to/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Tumor growth model</title>
+        <meta name="test" content="Test">
+        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="shortcut icon" type="image/x-icon" href="Schriftzug32x32.png">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/atom-one-dark.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    </head>    
+    <body>
+        
+        <a href="index.html">
+            <h1 style="color:black; font-family:; letter-spacing: px; font-weight: 0;"> Philip Blair
+            </h1>
+        </a>
+        
+        <div id="space"></div>
+               
+      <div id="centeredmenu">
+         <ul>
+            <li><a
+               href="Physics.html"
+               style="font-family:sans-serif">
+               Physics</a>
+            </li>
+            <li><a href="GraphicDesign.html"
+               style="font-family:sans-serif">Graphic Design</a></li>
+            <li><a href="Coding.html"
+                   class="active"
+               style="font-family:sans-serif">Coding</a></li>
+         </ul>
+      </div>
+        
+        <div id="bigspace"></div>
+        <hr style="height:0.5px" color="black" width=90%;>
+        <div id="doublespace"></div>
+
+        <h7> 
+            Classifying Particles
+        </h7>
+        
+        <div id="doublespace"></div>
+        
+        <p class="textblock" style="text-align: justify">
+        As part of my Master Thesis, I needed to classify samples with 500 nanometer sized polysterene particles. They were stretched from a spherical to an elliptical shape and then imaged using an electron microscope. The resulting images are now used to classify the statistics of a given sample.
+        </p>
+        
+        <p class="textblock" style="text-align: justify">
+        <strong>Image Processing</strong><br>
+        <strong>Shape detection | Statistics</strong><br>
+        <strong>Python | Computer Vision</strong><br>
+        </p>
+        <div id="doublespace"></div>
+        <hr style="height:0.5px" color="black" width=90%;>
+        <div id="doublespace"></div>
+        
+        
+        <h2> 
+            From Images to Histograms
+        </h2>
+        
+        <p class="textblock" style="text-align: justify">       
+        Below is an example image from the electron microscope. The particles are randomly distributed and sometimes aggregate. The contrast is already optimized while taking the images. In the backround, inhomogenities are visable that are caused by the gold layer that is needed to image the partciles. For each sample, multipile images have been recorded of different areas, making sure to capture as many as possible without being biased. Measuring their shape manually is not feasible, since this would require a lot of time.
+        </p>
+            
+        <div id="doublespace"></div>
+        <img class="center" src="OG_3.2F_07.png" alt="" loop=True >
+        <div id="doublespace"></div>
+        
+        <p class="textblock" style="text-align: justify">       
+        Before continuing, each image is preprocessed in the following manner: First, they are binarized with a threshold that is adjusted to the overall grey factor of the image. Next, noise get reduced by removing pixels that are not bundled together. The last step is to remove the aggregates. This step was done manually. The result is below.
+        </p>
+        
+        <div id="doublespace"></div>
+        <img class="center" src="3.2F_07.png" alt="" loop=True >
+        <div id="doublespace"></div>
+        
+        <p class="textblock" style="text-align: justify">       
+        Now an algorithm is used (see below) that detects the ellipses and calculates their aspect ratio. Each number is stored in a list and combined with all other images of the same sample to decrease the statistical error. Below is the result of the algorithm, overlayed with the preprocessed image. 
+        </p>
+        
+        <div id="doublespace"></div>
+        <img class="center" src="Detected_ellipses.png" alt="" loop=True >
+        <div id="doublespace"></div>
+        
+        <p class="textblock" style="text-align: justify">       
+        As a last step, a simple histogram can be plotted, and the standard deviation and average axis ration of the sample can be determined.
+        </p>
+        
+        <div id="doublespace"></div>
+        <img class="center" src="ellipse_histo.png" alt="" loop=True >
+        <div id="doublespace"></div>
+    
+        
+        <h2> 
+            Sample code
+        </h2>
+        
+        <pre>
+            <code class="language-python">
+    from matplotlib import pyplot as plt
+    import cv2
+    import numpy as np
+    import pandas
+    import os
+
+
+    image_path = 'example_path_123.tif'
+
+    # parse the filename
+    filename = ''.join(image_path.split("/")[-1].split(".")[:-1])
+    print(image_path)
+
+    # Read in the grayscale image
+    img = cv2.imread(image_path, 0)
+
+    # Convert the image to binary using thresholding
+    ret, thresh = cv2.threshold(img, 127, 255, 0)
+
+    # Find contours in the binary image
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Create an empty mask to draw the ellipses on
+    mask = np.zeros(img.shape, dtype=np.uint8)
+
+    # Initialize an empty list to store the axis ratios of the ellipses
+    axis_ratios = []
+
+    # Loop through each contour and fit an ellipse to it
+    for cnt in contours:
+        if (cnt.shape[0] >= 10):  # minimum number of points needed to fit an ellipse
+            ellipse = cv2.fitEllipse(cnt)
+            cv2.ellipse(mask, ellipse, (255, 255, 255), -1)  # draw the ellipse on the mask
+            try: 
+                axis_ratio = ellipse[1][1] / ellipse[1][0]  # calculate the axis ratio of the ellipse
+            except ZeroDivisionError:
+                continue
+            axis_ratios.append(axis_ratio)  # add the axis ratio to the list
+
+    # Show the original image with the ellipses overlaid on it
+    result = cv2.bitwise_and(img, mask)
+    cv2.imshow('Ellipses', result)
+
+    plt.rcParams["figure.figsize"] = [100, 100]
+    plt.figure()
+    plt.imshow(img, 'gray', interpolation='none')
+    plt.imshow(result, 'jet', interpolation='none', alpha=0.3)
+    plt.xticks([False])
+    plt.yticks([False])
+    plt.show()
+
+
+            </code>
+        </pre>
+        
+        
+
+        <div class="footer-div">
+            © philip blair 
+            &nbsp
+            &nbsp
+            |
+            &nbsp
+            philip.blair@gmx.de
+            &nbsp
+            |
+            &nbsp
+            &nbsp
+            
+            <a class='linknocolor' href="https://www.linkedin.com/in/philip-blair/" target=”_blank”>
+                <i class="fa fa-linkedin fa-2x" id="icon2"></i></a> 
+            &nbsp
+            &nbsp
+            &nbsp
+            <a class='linknocolor' href="https://github.com/datalove123" target=”_blank”> 
+                <i class="fa fa-github fa-2x"></i>
+            </a>
+        </div>
+
+                
+    <script src="/path/to/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    </body>
+</html>

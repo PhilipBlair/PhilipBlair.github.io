@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Tumor growth model</title>
+        <meta name="test" content="Test">
+        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="shortcut icon" type="image/x-icon" href="Schriftzug32x32.png">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/atom-one-dark.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    </head>    
+    <body>
+        
+        <a href="index.html">
+                        <h1 style="color:black; font-family:; letter-spacing: px; font-weight: 0;"> Philip Blair
+                        </h1>
+        </a>
+        
+        <div id="space"></div>
+               
+      <div id="centeredmenu">
+         <ul>
+            <li><a
+               href="Physics.html"
+               style="font-family:sans-serif">
+               Physics</a>
+            </li>
+            <li><a href="GraphicDesign.html"
+               style="font-family:sans-serif">Graphic Design</a></li>
+            <li><a href="Coding.html"
+                   class="active"
+               style="font-family:sans-serif">Coding</a></li>
+         </ul>
+      </div>
+        
+        <div id="bigspace"></div>
+        <hr style="height:0.5px" color="black" width=90%;>
+        <div id="doublespace"></div>
+
+        <h7> 
+            Tumor growth models
+        </h7>
+        
+        <div id="doublespace"></div>
+        
+        <p class="textblock" style="text-align: justify">
+        As part of my Bachelor thesis, I generated models that simulate dominant mutations in a replicating enviroment. The main question was at which conditions a dominant mutation could take over the whole population.
+        The report about the project can be viewed <a href="Report-Philip-Blair-final.pdf">here</a>.
+        </p>
+        
+        <p class="textblock" style="text-align: justify">
+        <strong>Simulation</strong><br>
+        <strong>Statistical Physics</strong><br>
+        <strong>Julia Coding</strong><br>
+        </p>
+        <div id="doublespace"></div>
+        <hr style="height:0.5px" color="black" width=90%;>
+        <div id="doublespace"></div>
+        
+        
+        <h2> 
+            The Eden Model in a Nutshell
+        </h2>
+        
+        <p class="textblock" style="text-align: justify">       
+        The Eden growth model is a computational model that simulates the growth of a cluster or pattern in a discrete space, such as a grid. It starts with a seed cell and adds neighboring cells randomly until a stopping condition is met. In the context of tumor growth, the Eden model can be used to study the expansion of tumor cells in a tissue. By considering the tumor as a growing cluster, the model makes it possible to explore factors influencing tumor growth, such as cell proliferation and migration.
+        </p>
+        
+        
+        <div id="doublespace"></div>
+        <img class="center" src="tumor_growth.gif" alt="" loop=True >
+        <div id="doublespace"></div>
+        
+        <p class="textblock" style="text-align: justify">       
+        To learn more about the model, I tried to predict how likely a benefitial mutation is going to survive, depending at which position it is emerging. 
+        </p>
+        
+        <div id="doublespace"></div>
+        <h2> 
+            Spatial effect on a mutations survival
+        </h2>
+        
+        <p class="textblock" style="text-align: justify">       
+        To predict the chances of a mutations survival, we need to look at the tumor surface, which can vary locally due to roughness and can significantly influence the spread of new mutations. 
+            
+        I introduces two quantitative measures: the number of free lattice points in the vicinity of a mutation (Nw) and the deviation of the mutation's radius from the average radius of cells in its region (∆R). My analysis explores the correlation between these measures and the number of mutations on the surface, the effect of the chosen region size, the influence of surface roughness, and the survival probabilities of mutations based on these measures over time intervals.
+        </p>
+        
+
+        <img class="center" src="Freie-Nachbarn-1.png" alt="" loop=True >
+        <div id="doublespace"></div>
+        
+        
+        <p class="textblock" style="text-align: justify">       
+        Above we see the the frontier of a growing tumor. A new mutation (yellow) has emerged and is now in competition with the surrounding tissue (green). The probability of its survival depends on its position relative to its nearest neighbours (brighter square). Nw calculates the free latticepoints around the new mutation. ∆R compares how far back the mutation is compared to its neighbours.
+        </p>
+        
+        <p class="textblock" style="text-align: justify">       
+        As a result of my research, I comfirmed that it is indeed possible to make a prediction about the survival of a mutation, as it is seen in the figures below.
+        </p>
+        
+        <img class="center" src="%C3%9Cberlebenswahrscheinlichkeit-dr-1.png" alt="" loop=True >
+        <div id="doublespace"></div>
+        
+        <img class="center" src="%C3%9Cberlebenswahrscheinlichkeit-N_w-1.png" alt="" loop=True >
+        <div id="doublespace"></div>
+        
+        <h2> 
+            Generate your own tumors
+        </h2>
+        
+        <pre>
+            <code class="language-python">
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import matplotlib.animation as animation
+
+    def generate_eden(size, num_iterations):
+
+        grid = np.zeros((size, size), dtype=int)
+        center = (size // 2, size // 2)
+        grid[center] = 1
+
+        for _ in range(num_iterations):
+            # Find all filled cells
+            filled_cells = np.argwhere(grid == 1)
+
+            # Select a random filled cell
+            index = np.random.randint(len(filled_cells))
+            i, j = filled_cells[index]
+
+            # Select a random empty neighbor
+            empty_neighbors = []
+            for dx in [-1, 0, 1]:
+                for dy in [-1, 0, 1]:
+                    if (dx == 0 and dy == 0) or i+dx < 0 or i+dx >= size or j+dy < 0 or j+dy >= size:
+                        continue
+                    if grid[i+dx, j+dy] == 0:
+                        empty_neighbors.append((i+dx, j+dy))
+
+            if empty_neighbors:
+                # Randomly select an empty neighbor
+                neighbor = empty_neighbors[np.random.randint(len(empty_neighbors))]
+                grid[neighbor] = 1
+
+        return grid
+
+    # Parameters
+    grid_size = 100
+    iterations = 100
+
+    # Generate enden tumor
+    plt.imshow(generate_eden(grid_size, iterations))
+
+            </code>
+        </pre>
+        
+        
+
+        <div class="footer-div">
+            © philip blair 
+            &nbsp
+            &nbsp
+            |
+            &nbsp
+            philip.blair@gmx.de
+            &nbsp
+            |
+            &nbsp
+            &nbsp
+            
+            <a class='linknocolor' href="https://www.linkedin.com/in/philip-blair/" target=”_blank”>
+                <i class="fa fa-linkedin fa-2x" id="icon2"></i></a> 
+            &nbsp
+            &nbsp
+            &nbsp
+            <a class='linknocolor' href="https://github.com/datalove123" target=”_blank”> 
+                <i class="fa fa-github fa-2x"></i>
+            </a>
+        </div>
+
+                
+    <script src="/path/to/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    </body>
+</html>
